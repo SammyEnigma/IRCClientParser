@@ -17,8 +17,8 @@
 */
 
 #include "irc_bot_message_handler.h"
-#include "irc_parser.h"
 #include "main_loop.h"
+#include "parser/irc_parser.h"
 
 #include <algorithm>
 #include <iostream>

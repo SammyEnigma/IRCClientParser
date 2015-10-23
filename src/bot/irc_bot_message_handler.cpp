@@ -18,9 +18,9 @@
 
 #include "irc_bot.h"
 #include "irc_bot_message_handler.h"
-#include "irc_command_parser.h"
-#include "lexer.h"
-#include "token_stream.h"
+#include "parser/irc_command_parser.h"
+#include "parser/lexer.h"
+#include "parser/token_stream.h"
 
 #include <iostream>
 #include <sstream>

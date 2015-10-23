@@ -16,29 +16,43 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#ifndef IRC_BOT_MESSAGE_HANDLER_H
-#define IRC_BOT_MESSAGE_HANDLER_H
+#ifndef MAIN_LOOP_H
+#define MAIN_LOOP_H
 
-#include "irc_parser.h"
+#include "irc_bot.h"
+#include "irc_socket_reader.h"
+#include "parser/irc_parser.h"
 
 #include <memory>
+#include <list>
 
 namespace irc_parser
 {
-class IRCBot;
-class PrivMessageData;
+class IRCBotMessageHandler;
 
-class IRCBotMessageHandler
+class MainLoop
 {
 public:
-    IRCBotMessageHandler();
+    MainLoop();
 
-    void handle(IRCMessage const& irc_msg, std::shared_ptr<IRCBot> const& irc_bot);
+    void add_irc_bot(IRCBot::Ptr& bot);
+
+    void start();
+    bool running() const;
+    void read_sockets();
+
+    void override_message_handler(
+        std::function<std::shared_ptr<IRCBotMessageHandler>(void)> const& message_handler_builder);
 
 private:
-    std::shared_ptr<PrivMessageData> priv_message_data;
+    void parse_irc_messages(std::string const& valid_messages, IRCBot::Ptr const& bot) const;
+
+    IRCSocketReader irc_socket_reader;
+    std::list<IRCBot::Ptr> bots;
+    std::shared_ptr<IRCBotMessageHandler> irc_message_handler;
+    bool active;
 };
 
 } // namespace irc_parser
 
-#endif // IRC_BOT_MESSAGE_HANDLER_H
+#endif // MAIN_LOOP_H
