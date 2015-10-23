@@ -70,6 +70,29 @@ std::tuple<int, std::string> read_popen_command(std::string const& command)
     return std::tie(ret, p_output);
 }
 
+std::string replace_symbols_in_url(std::string const& url)
+{
+    // Replace ( with %28 and ) with %29
+    std::string replaced;
+    for (auto const& c : url)
+    {
+        if (c == '(')
+        {
+            replaced += "%28";
+        }
+        else if (c == ')')
+        {
+            replaced += "%29";
+        }
+        else
+        {
+            replaced += c;
+        }
+    }
+
+    return replaced;
+}
+
 struct Command
 {
     std::string command;
@@ -116,6 +139,8 @@ void google(IRCCommandMessage const& irc_cmd_msg, IRCBot::Ptr const& irc_bot, Pr
                 temp += google.substr(pos + 6);
                 google = temp;
             }
+
+            google = replace_symbols_in_url(google);
 
             irc_bot->send_message(data->channel_to_reply, google);
         }
@@ -191,7 +216,10 @@ void wiki(IRCCommandMessage const& irc_cmd_msg, IRCBot::Ptr const& irc_bot, Priv
         auto wiki_ret = read_popen_command("curl -Ls -o /dev/null -w %{url_effective} https://en.wikipedia.org/wiki/Special:Random");
         auto wiki = std::get<1>(wiki_ret);
         if (!wiki.empty())
+        {
+            wiki = replace_symbols_in_url(wiki);
             irc_bot->send_message(data->channel_to_reply, wiki);
+        }
     }
     else
     {
@@ -202,7 +230,10 @@ void wiki(IRCCommandMessage const& irc_cmd_msg, IRCBot::Ptr const& irc_bot, Priv
         auto wiki_ret = read_popen_command("curl -Ls -o /dev/null -w %{url_effective} https://en.wikipedia.org/wiki/" + search);
         auto wiki = std::get<1>(wiki_ret);
         if (!wiki.empty())
+        {
+            wiki = replace_symbols_in_url(wiki);
             irc_bot->send_message(data->channel_to_reply, wiki);
+        }
     }
 }
 
