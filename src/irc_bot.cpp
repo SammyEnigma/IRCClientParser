@@ -32,6 +32,12 @@ void IRCBot::send_message(std::string const& to, std::string const& msg) const
     send_to_server({"PRIVMSG " + to + " :" + msg + "\r\n"});
 }
 
+// Parameters: <nickname>
+void IRCBot::nick(std::string const& nick) const
+{
+    send_to_server({"NICK " + nick + "\r\n"});
+}
+
 // Parameters: ( <channel> *( "," <channel> ) [ <key> *( "," <key> ) ] ) / "0"
 void IRCBot::join_channel(Channels const& channels, Keys const& keys) const
 {
@@ -42,9 +48,13 @@ void IRCBot::join_channel(Channels const& channels, Keys const& keys) const
     join_command.pop_back(); // remove extra ,
     join_command += " ";
 
-    for (auto const& k : keys)
-        join_command += k + ",";
-    join_command.pop_back(); // remove extra ,
+    if (!keys.empty())
+    {
+        for (auto const& k : keys)
+            join_command += k + ",";
+        join_command.pop_back(); // remove extra ,
+    }
+
     join_command += "\r\n";
 
     send_to_server(join_command);

@@ -258,6 +258,11 @@ void python(IRCCommandMessage const& irc_cmd_msg, IRCBot::Ptr const& irc_bot, Pr
             irc_bot->send_message(data->channel_to_reply, line);
 }
 
+void source(IRCCommandMessage const& irc_cmd_msg, IRCBot::Ptr const& irc_bot, PrivMessageData::Ptr& data)
+{
+    irc_bot->send_message(data->channel_to_reply, "https://github.com/BrandonSchaefer/IRCClientParser");
+}
+
 void help(IRCCommandMessage const& irc_cmd_msg, IRCBot::Ptr const& irc_bot, PrivMessageData::Ptr& data);
 
 Commands commands{
@@ -270,6 +275,7 @@ Commands commands{
     {"fact", fact},
     {"ghc", ghc},
     {"python", python},
+    {"source", source},
     {"help", help},
 };
 

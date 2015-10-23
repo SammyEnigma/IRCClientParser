@@ -78,6 +78,8 @@ public:
 
     explicit IRCBot(IRCServerInfo const& server_info);
 
+    void nick(std::string const& nick) const;
+
     void join_channel(Channels const& channels, Keys const& keys = {}) const;
     void part_channel(Channels const& channels, std::string const& part_message = {}) const;
     void mode_channel(std::string const& channel, std::vector<ModeMessage> const& mode_msg = {}) const;
