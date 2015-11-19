@@ -16,31 +16,50 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#ifndef IRC_BOT_MESSAGE_HANDLER_H
-#define IRC_BOT_MESSAGE_HANDLER_H
+#ifndef GUESSING_GAME_H
+#define GUESSING_GAME_H
 
-#include "commands/command.h"
-#include "parser/irc_parser.h"
-
-#include <memory>
-#include <vector>
+#include <random>
 
 namespace irc_parser
 {
-class IRCBot;
-class PrivMessageData;
 
-class IRCBotMessageHandler
+enum class GuessResult : unsigned
+{
+    HIGH,
+    LOW,
+    CORRECT
+};
+
+class GuessingGame
 {
 public:
-    IRCBotMessageHandler();
+    GuessingGame();
+    explicit GuessingGame(uint64_t max);
 
-    virtual void handle(IRCMessage const& irc_msg, std::shared_ptr<IRCBot> const& irc_bot);
+    GuessResult attempt_guess(uint64_t guess);
+
+    void restart();
+    void set_max(uint64_t new_max);
+    void set_level_increment(int increment);
+
+    void next_level();
+
+    uint64_t guesses() const;
+    uint64_t level_on() const;
+    uint64_t limit() const;
 
 private:
-    std::vector<Command::Ptr> commands;
+    uint64_t max{100};
+
+    std::mt19937 mt;
+
+    uint64_t answer{0};
+    uint64_t number_of_guesses{0};
+    uint64_t level{1};
+    int increment{2};
 };
 
 } // namespace irc_parser
 
-#endif // IRC_BOT_MESSAGE_HANDLER_H
+#endif // GUESSING_GAME_H

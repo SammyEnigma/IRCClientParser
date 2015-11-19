@@ -16,31 +16,67 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#ifndef IRC_BOT_MESSAGE_HANDLER_H
-#define IRC_BOT_MESSAGE_HANDLER_H
+#ifndef DECK_H
+#define DECK_H
 
-#include "commands/command.h"
-#include "parser/irc_parser.h"
-
-#include <memory>
-#include <vector>
+#include <random>
 
 namespace irc_parser
 {
-class IRCBot;
-class PrivMessageData;
-
-class IRCBotMessageHandler
+struct Card
 {
-public:
-    IRCBotMessageHandler();
+    enum class Suit : unsigned
+    {
+        HEART,
+        SPADE,
+        CLUB,
+        DIAMOND,
+        Size
+    };
 
-    virtual void handle(IRCMessage const& irc_msg, std::shared_ptr<IRCBot> const& irc_bot);
+    enum class Value : unsigned
+    {
+        ACE,
+        TWO,
+        THREE,
+        FOUR,
+        FIVE,
+        SIX,
+        SEVEN,
+        EIGHT,
+        NINE,
+        TEN,
+        JACK,
+        QUEEN,
+        KING,
+        Size
+    };
 
-private:
-    std::vector<Command::Ptr> commands;
+    Suit  suit;
+    Value value;
 };
 
-} // namespace irc_parser
+// TODO Look at making this base class then make this end, and have an infinte deck
+// TODO infinte for right now
+class Deck
+{
+public:
+    Deck();
 
-#endif // IRC_BOT_MESSAGE_HANDLER_H
+    bool has_next() const;
+    size_t size() const;
+
+    Card next_card();
+
+    void shuffle();
+
+private:
+    void fill();
+
+    std::mt19937 mt;
+    std::vector<Card> deck;
+};
+
+}
+
+#endif // DECK_H

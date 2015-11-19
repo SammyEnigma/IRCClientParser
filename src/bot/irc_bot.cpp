@@ -74,9 +74,11 @@ void IRCBot::part_channel(Channels const& channels, std::string const& part_mess
 }
 
 // Parameters: <channel> *( ( "-" / "+" ) *<modes> *<modeparams> )
-void IRCBot::mode_channel(std::string const& channel, std::vector<ModeMessage> const& mode_msg) const
+void IRCBot::mode_channel(
+    std::string const& channel,
+    std::vector<ModeMessage> const& mode_msg) const
 {
-    std::string mode_command{"MODE " + channel + " "};// + static_cast<char>(op)};
+    std::string mode_command{"MODE " + channel + " "};
     for (auto const& msg : mode_msg)
     {
         mode_command += static_cast<char>(msg.op);
@@ -94,6 +96,12 @@ void IRCBot::mode_channel(std::string const& channel, std::vector<ModeMessage> c
     mode_command += "\r\n";
 
     send_to_server(mode_command);
+}
+
+// Parameters: <msgtarget> <text>
+void IRCBot::send_notice(std::string const& target, std::string const& msg) const
+{
+    send_to_server("NOTICE " + target + " :" + msg + "\r\n");
 }
 
 // Parameters: [ <text> ]

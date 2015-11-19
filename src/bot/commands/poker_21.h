@@ -16,31 +16,37 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#ifndef IRC_BOT_MESSAGE_HANDLER_H
-#define IRC_BOT_MESSAGE_HANDLER_H
+#ifndef POKER_21_H
+#define POKER_21_H
 
-#include "commands/command.h"
-#include "parser/irc_parser.h"
-
-#include <memory>
-#include <vector>
+#include "deck.h"
 
 namespace irc_parser
 {
-class IRCBot;
-class PrivMessageData;
-
-class IRCBotMessageHandler
+struct Hand
 {
-public:
-    IRCBotMessageHandler();
-
-    virtual void handle(IRCMessage const& irc_msg, std::shared_ptr<IRCBot> const& irc_bot);
-
-private:
-    std::vector<Command::Ptr> commands;
+    Card first;
+    Card second;
 };
 
-} // namespace irc_parser
+class Poker21
+{
+public:
+    Poker21();
 
-#endif // IRC_BOT_MESSAGE_HANDLER_H
+    bool playing() const;
+    void start_hand();
+    void stop();
+
+    Hand dealers_hand() const;
+    Hand deal_hand();
+
+private:
+    bool started{false};
+    Hand dealers;
+    Deck deck;
+};
+
+}
+
+#endif /* POKER_21_H */

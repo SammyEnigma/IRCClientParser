@@ -16,31 +16,33 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#ifndef IRC_BOT_MESSAGE_HANDLER_H
-#define IRC_BOT_MESSAGE_HANDLER_H
-
-#include "commands/command.h"
-#include "parser/irc_parser.h"
-
-#include <memory>
-#include <vector>
+#include "fact.h"
+#include "popen_command.h"
 
 namespace irc_parser
 {
-class IRCBot;
-class PrivMessageData;
 
-class IRCBotMessageHandler
+namespace
 {
-public:
-    IRCBotMessageHandler();
+std::string const fact_match{"fact"};
+std::string const fact_command{
+    "wget randomfunfacts.com -O - 2>/dev/null | grep \\<strong\\> | sed \"s;^.*<i>\\(.*\\)</i>.*$;\\1;\""};
+}
 
-    virtual void handle(IRCMessage const& irc_msg, std::shared_ptr<IRCBot> const& irc_bot);
+void Fact::command(
+    IRCCommandMessage const& irc_cmd_msg,
+    IRCBot::Ptr const& irc_bot,
+    std::string const& channel_to_reply)
+{
+    auto fact_ret = exec_popen_command(fact_command);
+    auto fact = std::get<1>(fact_ret);
+    if (!fact.empty())
+        irc_bot->send_message(channel_to_reply, fact);
+}
 
-private:
-    std::vector<Command::Ptr> commands;
-};
+std::vector<std::string> Fact::match() const
+{
+    return {fact_match};
+}
 
-} // namespace irc_parser
-
-#endif // IRC_BOT_MESSAGE_HANDLER_H
+}

@@ -16,31 +16,27 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#ifndef IRC_BOT_MESSAGE_HANDLER_H
-#define IRC_BOT_MESSAGE_HANDLER_H
+#ifndef YOUTUBE_H
+#define YOUTUBE_H
 
-#include "commands/command.h"
-#include "parser/irc_parser.h"
-
-#include <memory>
-#include <vector>
+#include "command.h"
 
 namespace irc_parser
 {
-class IRCBot;
-class PrivMessageData;
 
-class IRCBotMessageHandler
+class Youtube : public Command
 {
 public:
-    IRCBotMessageHandler();
+    Youtube() = default;
 
-    virtual void handle(IRCMessage const& irc_msg, std::shared_ptr<IRCBot> const& irc_bot);
+    virtual void command(
+        IRCCommandMessage const& irc_cmd_msg,
+        IRCBot::Ptr const& irc_bot,
+        std::string const& channel_to_reply) override;
 
-private:
-    std::vector<Command::Ptr> commands;
+    virtual std::vector<std::string> match() const override;
 };
 
 } // namespace irc_parser
 
-#endif // IRC_BOT_MESSAGE_HANDLER_H
+#endif /* YOUTUBE_H */

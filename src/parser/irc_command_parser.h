@@ -29,6 +29,7 @@ namespace irc_parser
 
 struct IRCCommandMessage
 {
+    std::string user;
     std::string command;
     std::vector<std::string> params;
 };

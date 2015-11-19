@@ -46,6 +46,9 @@ IRCCommandMessage IRCCommandParser::parse(std::string const& bot_name)
 
     // *( SPACE )
     token_stream.while_has({Type::SPACE});
+    if (!token_stream.has_next())
+        throw std::runtime_error("Empty command");
+
     auto t = token_stream.look();
 
     if (t.type != Type::BANG)

@@ -41,7 +41,7 @@ std::string IRCSocketReader::read_socket(int sock)
 {
     int numbytes{0};
     char buf[max_buff];
-    auto valid_buff{unfinished_messages[sock]};
+    auto valid_buff = unfinished_messages[sock];
 
     do
     {

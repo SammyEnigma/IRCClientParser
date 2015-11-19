@@ -16,31 +16,28 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#ifndef IRC_BOT_MESSAGE_HANDLER_H
-#define IRC_BOT_MESSAGE_HANDLER_H
-
-#include "commands/command.h"
-#include "parser/irc_parser.h"
-
-#include <memory>
-#include <vector>
+#include "pick.h"
 
 namespace irc_parser
 {
-class IRCBot;
-class PrivMessageData;
 
-class IRCBotMessageHandler
+namespace
 {
-public:
-    IRCBotMessageHandler();
+std::string const pick_match{"pick"};
+}
 
-    virtual void handle(IRCMessage const& irc_msg, std::shared_ptr<IRCBot> const& irc_bot);
+void Pick::command(
+    IRCCommandMessage const& irc_cmd_msg,
+    IRCBot::Ptr const& irc_bot,
+    std::string const& channel_to_reply)
+{
+    auto picked = irc_cmd_msg.params[rand() % irc_cmd_msg.params.size()];
+    irc_bot->send_message(channel_to_reply, picked);
+}
 
-private:
-    std::vector<Command::Ptr> commands;
-};
+std::vector<std::string> Pick::match() const
+{
+    return {pick_match};
+}
 
-} // namespace irc_parser
-
-#endif // IRC_BOT_MESSAGE_HANDLER_H
+}

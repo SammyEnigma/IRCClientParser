@@ -80,9 +80,19 @@ public:
 
     void nick(std::string const& nick) const;
 
-    void join_channel(Channels const& channels, Keys const& keys = {}) const;
-    void part_channel(Channels const& channels, std::string const& part_message = {}) const;
-    void mode_channel(std::string const& channel, std::vector<ModeMessage> const& mode_msg = {}) const;
+    void join_channel(
+        Channels const& channels,
+        Keys const& keys = {}) const;
+
+    void part_channel(
+        Channels const& channels,
+        std::string const& part_message = {}) const;
+
+    void mode_channel(
+        std::string const& channel,
+        std::vector<ModeMessage> const& mode_msg = {}) const;
+
+    void send_notice(std::string const& target, std::string const& msg) const;
 
     void away(std::string const& text = {});
 

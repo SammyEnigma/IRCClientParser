@@ -16,31 +16,18 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#ifndef IRC_BOT_MESSAGE_HANDLER_H
-#define IRC_BOT_MESSAGE_HANDLER_H
+#ifndef POPEN_COMMAND_H
+#define POPEN_COMMAND_H 
 
-#include "commands/command.h"
-#include "parser/irc_parser.h"
-
-#include <memory>
-#include <vector>
+#include <string>
+#include <tuple>
 
 namespace irc_parser
 {
-class IRCBot;
-class PrivMessageData;
 
-class IRCBotMessageHandler
-{
-public:
-    IRCBotMessageHandler();
-
-    virtual void handle(IRCMessage const& irc_msg, std::shared_ptr<IRCBot> const& irc_bot);
-
-private:
-    std::vector<Command::Ptr> commands;
-};
+std::tuple<int, std::string> exec_popen_command(std::string const& command);
 
 } // namespace irc_parser
 
-#endif // IRC_BOT_MESSAGE_HANDLER_H
+
+#endif /* POPEN_COMMAND_H */

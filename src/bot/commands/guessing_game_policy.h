@@ -16,31 +16,33 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#ifndef IRC_BOT_MESSAGE_HANDLER_H
-#define IRC_BOT_MESSAGE_HANDLER_H
+#ifndef GUESSING_GAME_POLICY_H
+#define GUESSING_GAME_POLICY_H
 
-#include "commands/command.h"
-#include "parser/irc_parser.h"
+#include "command.h"
+#include "guessing_game.h"
 
-#include <memory>
-#include <vector>
+#include <map>
 
 namespace irc_parser
 {
-class IRCBot;
-class PrivMessageData;
 
-class IRCBotMessageHandler
+class GuessingGamePolicy : public Command
 {
 public:
-    IRCBotMessageHandler();
+    GuessingGamePolicy() = default;
 
-    virtual void handle(IRCMessage const& irc_msg, std::shared_ptr<IRCBot> const& irc_bot);
+    virtual void command(
+        IRCCommandMessage const& irc_cmd_msg,
+        IRCBot::Ptr const& irc_bot,
+        std::string const& channel_to_reply) override;
+
+    virtual std::vector<std::string> match() const override;
 
 private:
-    std::vector<Command::Ptr> commands;
+    std::map<std::string, GuessingGame> gg_per_channel;
 };
 
 } // namespace irc_parser
 
-#endif // IRC_BOT_MESSAGE_HANDLER_H
+#endif /* GUESSING_GAME_POLICY_H */

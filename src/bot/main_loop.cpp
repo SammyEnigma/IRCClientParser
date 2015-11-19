@@ -56,7 +56,8 @@ bool MainLoop::running() const
     return active;
 }
 
-void MainLoop::override_message_handler(std::function<std::shared_ptr<IRCBotMessageHandler>(void)> const& message_handler_builder)
+void MainLoop::override_message_handler(
+    std::function<std::shared_ptr<IRCBotMessageHandler>(void)> const& message_handler_builder)
 {
     irc_message_handler = message_handler_builder();
 }

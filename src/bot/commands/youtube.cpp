@@ -16,31 +16,38 @@
 * Authored by: Brandon Schaefer <brandontschaefer@gmail.com>
 */
 
-#ifndef IRC_BOT_MESSAGE_HANDLER_H
-#define IRC_BOT_MESSAGE_HANDLER_H
-
-#include "commands/command.h"
-#include "parser/irc_parser.h"
-
-#include <memory>
-#include <vector>
+#include "youtube.h"
 
 namespace irc_parser
 {
-class IRCBot;
-class PrivMessageData;
 
-class IRCBotMessageHandler
+namespace
 {
-public:
-    IRCBotMessageHandler();
+    std::string const youtube_match{"youtube"};
+}
 
-    virtual void handle(IRCMessage const& irc_msg, std::shared_ptr<IRCBot> const& irc_bot);
+void Youtube::command(
+    IRCCommandMessage const& irc_cmd_msg,
+    IRCBot::Ptr const& irc_bot,
+    std::string const& channel_to_reply)
+{
+    if (!irc_cmd_msg.params.empty())
+    {
+        std::string search;
+        for (auto const& p : irc_cmd_msg.params)
+            search += p + "+";
+        search.pop_back();
+        irc_bot->send_message(channel_to_reply, "https://www.youtube.com/results?q=" + search);
+    }
+    else
+    {
+        irc_bot->send_message(channel_to_reply, "[ERROR] youtube expects 1 or more arguments");
+    }
+}
 
-private:
-    std::vector<Command::Ptr> commands;
-};
+std::vector<std::string> Youtube::match() const
+{
+    return {youtube_match};
+}
 
-} // namespace irc_parser
-
-#endif // IRC_BOT_MESSAGE_HANDLER_H
+}
